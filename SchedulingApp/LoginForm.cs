@@ -64,7 +64,7 @@ namespace SchedulingApp
                             status = "Success!";
                             int userId = Convert.ToInt32(reader["userId"]);
                             CheckUpcomingAppoitments(userId);
-                            var mainForm = new MainForm(username);
+                            var mainForm = new MainForm(username, userId);
                             mainForm.Show();
                             this.Hide();
 

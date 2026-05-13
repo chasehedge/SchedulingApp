@@ -176,6 +176,7 @@
             // 
             // customersTable
             // 
+            this.customersTable.AllowUserToAddRows = false;
             this.customersTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.customersTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.customersTable.Location = new System.Drawing.Point(23, 17);
@@ -214,6 +215,7 @@
             this.appointmentEndDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.appointmentEndDateTimePicker.Location = new System.Drawing.Point(93, 447);
             this.appointmentEndDateTimePicker.Name = "appointmentEndDateTimePicker";
+            this.appointmentEndDateTimePicker.ShowUpDown = true;
             this.appointmentEndDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.appointmentEndDateTimePicker.TabIndex = 13;
             // 
@@ -223,6 +225,7 @@
             this.appointmentStartDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.appointmentStartDateTimePicker.Location = new System.Drawing.Point(93, 416);
             this.appointmentStartDateTimePicker.Name = "appointmentStartDateTimePicker";
+            this.appointmentStartDateTimePicker.ShowUpDown = true;
             this.appointmentStartDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.appointmentStartDateTimePicker.TabIndex = 12;
             // 
@@ -301,6 +304,7 @@
             this.appointmentDeleteButton.TabIndex = 3;
             this.appointmentDeleteButton.Text = "Delete";
             this.appointmentDeleteButton.UseVisualStyleBackColor = true;
+            this.appointmentDeleteButton.Click += new System.EventHandler(this.appointmentDeleteButton_Click);
             // 
             // appointmentUpdateButton
             // 
@@ -323,12 +327,14 @@
             // 
             // appointmentsTable
             // 
+            this.appointmentsTable.AllowUserToAddRows = false;
             this.appointmentsTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.appointmentsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.appointmentsTable.Location = new System.Drawing.Point(23, 17);
             this.appointmentsTable.Name = "appointmentsTable";
             this.appointmentsTable.Size = new System.Drawing.Size(706, 240);
             this.appointmentsTable.TabIndex = 0;
+            this.appointmentsTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.appointmentsTable_CellClick);
             // 
             // calendarTab
             // 

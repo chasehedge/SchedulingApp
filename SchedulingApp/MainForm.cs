@@ -21,15 +21,17 @@ namespace SchedulingApp
         private int selectedCustomerId;
         private string connectionString = "server=localhost;user=root;password=root;database=scheduling_db";
         private string currentUser;
+        private int currentUserId;
         public MainForm()
         {
             InitializeComponent();
         }
 
-        public MainForm(string username)
+        public MainForm(string username, int userId)
         {
             InitializeComponent();
             currentUser = username;
+            currentUserId = userId;
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -40,7 +42,7 @@ namespace SchedulingApp
         private void MainForm_Load(object sender, EventArgs e)
         {
             LoadCustomers();
-            Loadappointments();
+            LoadAppointments();
             LoadCustomerComboBox();
         }
         // add button for customers tab , includes validation for non empty fields, trimmed fields, and phone number only allows digits and -.
@@ -182,7 +184,7 @@ namespace SchedulingApp
             }
 
         }
-
+        // populates text fields when user clicks on customer
         private void customersTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // returns the method if user clicks something unexpected to brevent code break
@@ -257,7 +259,7 @@ namespace SchedulingApp
             }
         }
         // populates the appoitments DataGridVeiw (table) with the data, can be called again to refresh
-        private void Loadappointments()
+        private void LoadAppointments()
         {
             try
             {
@@ -271,12 +273,24 @@ namespace SchedulingApp
                     var adapter = new MySqlDataAdapter(command);
                     adapter.Fill(dataTable);
 
+                    // loops through each row and converts the values to local time to display correctly for the user in the table (or else it will show UTC time)
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        DateTime utcStart = DateTime.SpecifyKind((DateTime)row["start"], DateTimeKind.Utc);
+                        DateTime utcEnd = DateTime.SpecifyKind((DateTime)row["end"], DateTimeKind.Utc);
+                        row["start"] = utcStart.ToLocalTime();
+                        row["end"] = utcEnd.ToLocalTime();
+                    }
+
+                    
                     appointmentsTable.DataSource = dataTable;
+
 
                     // hiding appointmentId and customerId only used for linking dont need to show it
                     appointmentsTable.Columns["customerId"].Visible = false;
                     appointmentsTable.Columns["appointmentId"].Visible = false;
 
+                    
                 }
             }
             catch (Exception ex)
@@ -300,7 +314,7 @@ namespace SchedulingApp
 
                     appointmentCustomerComboBox.DataSource = dataTable;
                     appointmentCustomerComboBox.DisplayMember = "customerName";
-                    appointmentCustomerComboBox.ValueMember = "customerName";
+                    appointmentCustomerComboBox.ValueMember = "customerId";
                 }
             }
             catch (Exception ex)
@@ -336,7 +350,7 @@ namespace SchedulingApp
             }
 
             // get EST time to convert from local user time to EST
-            // convert start time and end time to EST
+            // convert start time and end time to EST to check against the business hours
 
             TimeZoneInfo estZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             DateTime estStart = TimeZoneInfo.ConvertTime(start, TimeZoneInfo.Local, estZone);
@@ -355,7 +369,121 @@ namespace SchedulingApp
                 MessageBox.Show("Appointments must be between 9:00 am and 5:00 pm EST.", "Validation Error");
                 return;
             }
-            
+
+            // convert times back to UTC, you want to always store your times in UTC to keep it consistent
+            DateTime utcStart = start.ToUniversalTime();
+            DateTime utcEnd = end.ToUniversalTime();
+
+
+            // validation for overlapping appointments
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var overlapCommand = new MySqlCommand(
+                        $"SELECT COUNT(*) FROM appointment WHERE start < '{utcEnd:yyyy-MM-dd HH:mm:ss}' " +
+                        $"AND end > '{utcStart:yyyy-MM-dd HH:mm:ss}'", conn );
+
+                    long overlapCount = (long)overlapCommand.ExecuteScalar();
+
+                    if (overlapCount > 0)
+                    {
+                        MessageBox.Show("This appointment overlaps with an existing appointment", "Validation Error");
+                        return;
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+            // convert times back to UTC, you want to always store your times in UTC to keep it consistent
+            //DateTime utcStart = start.ToUniversalTime();
+            //DateTime utcEnd = end.ToUniversalTime();
+
+            // insert statement to add info to database after all validations have passed
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var command = new MySqlCommand(
+                        $"INSERT INTO appointment (customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) " +
+                        $"VALUES ({selectedCustomerId}, {currentUserId}, '{title}', '', '', '', '{type}', '', " +
+                        $"'{utcStart:yyyy-MM-dd HH:mm:ss}', '{utcEnd:yyyy-MM-dd HH:mm:ss}', NOW(), '{currentUser}', NOW(), '{currentUser}')", conn );
+                    command.ExecuteNonQuery();
+
+                    // refresh table to see updated info
+                    LoadAppointments();
+                    
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+          
+        }
+
+        private void appointmentDeleteButton_Click(object sender, EventArgs e)
+        {
+            //check if user has selected a row to delete
+            if (appointmentsTable.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select an apointment to delete", "Error");
+                return;
+            }
+
+            //generate message asking if user wants to delete selected appointment
+            var confirm = MessageBox.Show("Are you sure you want to delete the selected appointment?", "Confirm Delete" , MessageBoxButtons.YesNo);
+
+            if (confirm != DialogResult.Yes)
+            {
+                return;
+            }
+
+            // get ID of selected appointment and delete it
+            int appointmentId = Convert.ToInt32(appointmentsTable.SelectedRows[0].Cells["appointmentId"].Value);
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var command = new MySqlCommand($"DELETE FROM appointment WHERE appointmentId = {appointmentId}", conn);
+
+                    command.ExecuteNonQuery();
+
+                    //refresh appointment table
+                    LoadAppointments();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+      
+        }
+
+        private void appointmentsTable_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // returns function if user clicks something else to prevent code break
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+
+            appointmentTitleTextBox.Text = appointmentsTable.Rows[e.RowIndex].Cells["title"].Value.ToString();
+            appointmentTypeTextBox.Text = appointmentsTable.Rows[e.RowIndex].Cells["type"].Value.ToString();
+            appointmentCustomerComboBox.SelectedValue = appointmentsTable.Rows[e.RowIndex].Cells["customerId"].Value;
+            appointmentStartDateTimePicker.Value = (DateTime)appointmentsTable.Rows[e.RowIndex].Cells["start"].Value;
+            appointmentEndDateTimePicker.Value = (DateTime)appointmentsTable.Rows[e.RowIndex].Cells["end"].Value;
         }
     }
 }
