@@ -33,3 +33,14 @@ To run:
 ## Login
 
 Use `test` / `test` for the username and password.
+
+## Screenshots
+
+### Customer Management
+![Customers](SchedulingApp/screenshots/customer.png)
+
+### Appointment Management
+![Appointments](SchedulingApp/screenshots/appointment.png)
+
+### Login Form
+![Login Form](SchedulingApp/screenshots/login.png)
