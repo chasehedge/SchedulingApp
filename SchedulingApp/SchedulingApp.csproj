@@ -143,5 +143,8 @@
   <ItemGroup>
     <Content Include="database_setup.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="screenshots\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

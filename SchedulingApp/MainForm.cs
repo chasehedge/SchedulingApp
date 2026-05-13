@@ -105,6 +105,7 @@ namespace SchedulingApp
 
                     // calling LoadCustomers again to refresh the table after the new data has been added
                     LoadCustomers();
+                    LoadCustomerComboBox();
 
                     // refreshing text fields to allow more data to be added smoothly
                     customerNameTextBox.Clear();
@@ -176,6 +177,7 @@ namespace SchedulingApp
 
                     // refresh data after deletion
                     LoadCustomers();
+                    LoadCustomerComboBox();
                 }
             }
             catch (Exception ex)
@@ -249,6 +251,7 @@ namespace SchedulingApp
 
                     // refresh table info after performing update
                     LoadCustomers();
+                    LoadCustomerComboBox();
 
                 }
                 

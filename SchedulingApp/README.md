@@ -33,3 +33,16 @@ To run:
 ## Login
 
 Use `test` / `test` for the username and password.
+
+## Screenshots
+
+
+
+### Customer Management
+![Customers](screenshots/customer.png)
+
+### Appointment Management
+![Appointments](screenshots/appointment.png)
+
+### Login Form
+![Login Form](screenshots/login.png)
