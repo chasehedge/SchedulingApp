@@ -37,10 +37,10 @@ Use `test` / `test` for the username and password.
 ## Screenshots
 
 ### Customer Management
-![Customers](SchedulingApp/screenshots/customer.png)
+![Customers](SchedulingApp/screenshots/customer.PNG)
 
 ### Appointment Management
-![Appointments](SchedulingApp/screenshots/appointment.png)
+![Appointments](SchedulingApp/screenshots/appointment.PNG)
 
 ### Login Form
-![Login Form](SchedulingApp/screenshots/login.png)
+![Login Form](SchedulingApp/screenshots/login.PNG)
