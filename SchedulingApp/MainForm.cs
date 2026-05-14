@@ -55,7 +55,7 @@ namespace SchedulingApp
             var phoneNumber = phoneNumberTextBox.Text.Trim();
 
             // Checks if all fields are filled and if not displays error message
-            if (string.IsNullOrEmpty(customerName) || string.IsNullOrEmpty(address) || 
+            if (string.IsNullOrEmpty(customerName) || string.IsNullOrEmpty(address) ||
             string.IsNullOrEmpty(phoneNumber))
 
             {
@@ -84,7 +84,7 @@ namespace SchedulingApp
                     // INSERT statements into database after validations have been ran
 
                     var countryCommand = new MySqlCommand($"INSERT INTO country (country, createDate, createdBy, lastUpdate, lastUpdateBy) " +
-                        $"VALUES ('{country}', NOW(), '{currentUser}', NOW(), '{currentUser}')" , conn);
+                        $"VALUES ('{country}', NOW(), '{currentUser}', NOW(), '{currentUser}')", conn);
                     countryCommand.ExecuteNonQuery();
                     long countryId = countryCommand.LastInsertedId;
 
@@ -202,7 +202,7 @@ namespace SchedulingApp
 
         private void updateButton_Click(object sender, EventArgs e)
         {
-         
+
             // make sure user has selected a customer to update - display error if not
             if (customersTable.SelectedRows.Count == 0)
             {
@@ -212,7 +212,7 @@ namespace SchedulingApp
 
             // grabs the addressId and CustomerId from selected rows to apply updated info
             int customerId = Convert.ToInt32(customersTable.SelectedRows[0].Cells["customerId"].Value);
-            int addressId = Convert.ToInt32(customersTable.SelectedRows [0].Cells["addressId"].Value);    
+            int addressId = Convert.ToInt32(customersTable.SelectedRows[0].Cells["addressId"].Value);
 
             // Gather text fields as variables and trims them.
             var customerName = customerNameTextBox.Text.Trim();
@@ -246,7 +246,7 @@ namespace SchedulingApp
                     customerIdCommand.ExecuteNonQuery();
 
                     var addressCommand = new MySqlCommand($"UPDATE address SET address = '{address}', lastUpdate = NOW(), lastUpdateBy = '{currentUser}', phone = '{phoneNumber}' " +
-                        $"WHERE addressId = {addressId}" , conn);
+                        $"WHERE addressId = {addressId}", conn);
                     addressCommand.ExecuteNonQuery();
 
                     // refresh table info after performing update
@@ -254,7 +254,7 @@ namespace SchedulingApp
                     LoadCustomerComboBox();
 
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -285,7 +285,7 @@ namespace SchedulingApp
                         row["end"] = utcEnd.ToLocalTime();
                     }
 
-                    
+
                     appointmentsTable.DataSource = dataTable;
 
 
@@ -293,7 +293,7 @@ namespace SchedulingApp
                     appointmentsTable.Columns["customerId"].Visible = false;
                     appointmentsTable.Columns["appointmentId"].Visible = false;
 
-                    
+
                 }
             }
             catch (Exception ex)
@@ -358,7 +358,7 @@ namespace SchedulingApp
             TimeZoneInfo estZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             DateTime estStart = TimeZoneInfo.ConvertTime(start, TimeZoneInfo.Local, estZone);
             DateTime estEnd = TimeZoneInfo.ConvertTime(end, TimeZoneInfo.Local, estZone);
-            
+
             // validation for monday - friday
             if (estStart.DayOfWeek == DayOfWeek.Saturday || estStart.DayOfWeek == DayOfWeek.Sunday)
             {
@@ -387,7 +387,7 @@ namespace SchedulingApp
                     conn.Open();
                     var overlapCommand = new MySqlCommand(
                         $"SELECT COUNT(*) FROM appointment WHERE start < '{utcEnd:yyyy-MM-dd HH:mm:ss}' " +
-                        $"AND end > '{utcStart:yyyy-MM-dd HH:mm:ss}'", conn );
+                        $"AND end > '{utcStart:yyyy-MM-dd HH:mm:ss}'", conn);
 
                     long overlapCount = (long)overlapCommand.ExecuteScalar();
 
@@ -405,9 +405,6 @@ namespace SchedulingApp
                 MessageBox.Show(ex.Message, "Error");
             }
 
-            // convert times back to UTC, you want to always store your times in UTC to keep it consistent
-            //DateTime utcStart = start.ToUniversalTime();
-            //DateTime utcEnd = end.ToUniversalTime();
 
             // insert statement to add info to database after all validations have passed
 
@@ -419,19 +416,19 @@ namespace SchedulingApp
                     var command = new MySqlCommand(
                         $"INSERT INTO appointment (customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) " +
                         $"VALUES ({selectedCustomerId}, {currentUserId}, '{title}', '', '', '', '{type}', '', " +
-                        $"'{utcStart:yyyy-MM-dd HH:mm:ss}', '{utcEnd:yyyy-MM-dd HH:mm:ss}', NOW(), '{currentUser}', NOW(), '{currentUser}')", conn );
+                        $"'{utcStart:yyyy-MM-dd HH:mm:ss}', '{utcEnd:yyyy-MM-dd HH:mm:ss}', NOW(), '{currentUser}', NOW(), '{currentUser}')", conn);
                     command.ExecuteNonQuery();
 
                     // refresh table to see updated info
                     LoadAppointments();
-                    
+
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error");
             }
-          
+
         }
 
         private void appointmentDeleteButton_Click(object sender, EventArgs e)
@@ -444,7 +441,7 @@ namespace SchedulingApp
             }
 
             //generate message asking if user wants to delete selected appointment
-            var confirm = MessageBox.Show("Are you sure you want to delete the selected appointment?", "Confirm Delete" , MessageBoxButtons.YesNo);
+            var confirm = MessageBox.Show("Are you sure you want to delete the selected appointment?", "Confirm Delete", MessageBoxButtons.YesNo);
 
             if (confirm != DialogResult.Yes)
             {
@@ -471,7 +468,7 @@ namespace SchedulingApp
             {
                 MessageBox.Show(ex.Message, "Error");
             }
-      
+
         }
 
         private void appointmentsTable_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -487,6 +484,121 @@ namespace SchedulingApp
             appointmentCustomerComboBox.SelectedValue = appointmentsTable.Rows[e.RowIndex].Cells["customerId"].Value;
             appointmentStartDateTimePicker.Value = (DateTime)appointmentsTable.Rows[e.RowIndex].Cells["start"].Value;
             appointmentEndDateTimePicker.Value = (DateTime)appointmentsTable.Rows[e.RowIndex].Cells["end"].Value;
+        }
+
+        private void appointmentUpdateButton_Click(object sender, EventArgs e)
+        {
+            //check if user has selected a row to delete
+            if (appointmentsTable.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select an apointment to update", "Error");
+                return;
+            }
+
+            // get ID of selected appointment
+            int appointmentId = Convert.ToInt32(appointmentsTable.SelectedRows[0].Cells["appointmentId"].Value);
+
+            // grabbing text field values and trimming them
+
+            var title = appointmentTitleTextBox.Text.Trim();
+            var type = appointmentTypeTextBox.Text.Trim();
+            int selectedCustomerId = Convert.ToInt32(appointmentCustomerComboBox.SelectedValue);
+            DateTime start = appointmentStartDateTimePicker.Value;
+            DateTime end = appointmentEndDateTimePicker.Value;
+
+            // validation to check if title / type are empty
+
+            if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(type))
+            {
+                MessageBox.Show("Title and Type fields are required.", "Validation Error");
+                return;
+            }
+
+            // validation to check if start time is before end time to prevent errors
+
+            if (end <= start)
+            {
+                MessageBox.Show("End time must be after start time", "Validation Error");
+                return;
+
+            }
+
+            // get EST time to convert from local user time to EST
+            // convert start time and end time to EST to check against the business hours
+
+            TimeZoneInfo estZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            DateTime estStart = TimeZoneInfo.ConvertTime(start, TimeZoneInfo.Local, estZone);
+            DateTime estEnd = TimeZoneInfo.ConvertTime(end, TimeZoneInfo.Local, estZone);
+
+            // validation for monday - friday
+            if (estStart.DayOfWeek == DayOfWeek.Saturday || estStart.DayOfWeek == DayOfWeek.Sunday)
+            {
+                MessageBox.Show("Appointments must be schedules Monday through Friday.", "Validation Error");
+                return;
+            }
+
+            //validation for business hours only 9am - 5pm
+            if (estStart.Hour < 9 || estEnd.Hour > 17 || (estEnd.Hour == 17 && estEnd.Minute > 0))
+            {
+                MessageBox.Show("Appointments must be between 9:00 am and 5:00 pm EST.", "Validation Error");
+                return;
+            }
+
+            // convert times back to UTC, you want to always store your times in UTC to keep it consistent
+            DateTime utcStart = start.ToUniversalTime();
+            DateTime utcEnd = end.ToUniversalTime();
+
+            // validation for overlapping appointments
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var overlapCommand = new MySqlCommand(
+                        $"SELECT COUNT(*) FROM appointment WHERE start < '{utcEnd:yyyy-MM-dd HH:mm:ss}' " +
+                        $"AND end > '{utcStart:yyyy-MM-dd HH:mm:ss}' AND appointmentId != {appointmentId}", conn);
+
+                    long overlapCount = (long)overlapCommand.ExecuteScalar();
+
+                    if (overlapCount > 0)
+                    {
+                        MessageBox.Show("This appointment overlaps with an existing appointment", "Validation Error");
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+
+            // update statement to add info to database after all validations have passed
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var command = new MySqlCommand(
+                        $"UPDATE appointment SET customerId = {selectedCustomerId}, title = '{title}', type = '{type}', " +
+                        $"start = '{utcStart:yyyy-MM-dd HH:mm:ss}', end = '{utcEnd:yyyy-MM-dd HH:mm:ss}', " +
+                        $"lastUpdate = NOW(), lastUpdateBy = '{currentUser}' " +
+                        $"WHERE appointmentId = {appointmentId}", conn);
+
+
+                    command.ExecuteNonQuery();
+
+                    // refresh table to see updated info
+                    LoadAppointments();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
         }
     }
 }

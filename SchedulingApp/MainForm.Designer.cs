@@ -314,6 +314,7 @@
             this.appointmentUpdateButton.TabIndex = 2;
             this.appointmentUpdateButton.Text = "Update";
             this.appointmentUpdateButton.UseVisualStyleBackColor = true;
+            this.appointmentUpdateButton.Click += new System.EventHandler(this.appointmentUpdateButton_Click);
             // 
             // appointmentAddButton
             // 
