@@ -600,6 +600,47 @@ namespace SchedulingApp
                 MessageBox.Show(ex.Message, "Error");
             }
         }
+
+        
+        // populates the calendarDataGridView with the appointments from the day selected on the calendar
+        private void monthCalendar_DateChanged(object sender, DateRangeEventArgs e)
+        {
+
+            // grabbing the selected date to know which date the user wants to see appointments from
+            DateTime selectedDate = monthCalendar.SelectionStart;
+
+            try
+            {
+                using ( var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var command = new MySqlCommand($"SELECT customer.customerName, title, type, start, end FROM appointment " +
+                        $"JOIN customer on appointment.customerId = customer.customerId " +
+                        $"WHERE userId = {currentUserId} AND DATE(start) = '{selectedDate:yyyy-MM-dd}'", conn);
+
+                    var dataTable = new DataTable();
+                    var adapter = new MySqlDataAdapter(command);
+                    adapter.Fill(dataTable);
+
+                    // The DateTime has a property called kind, if we do not specify that the kind is UTC then it will confuse to translation method to local time
+                    // loop through the rows in datagridview and convert them to local user time for display
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        DateTime utcStart = DateTime.SpecifyKind((DateTime)row["start"], DateTimeKind.Utc);
+                        DateTime utcEnd = DateTime.SpecifyKind((DateTime)row["end"], DateTimeKind.Utc);
+                        row["start"] = utcStart.ToLocalTime();
+                        row["end"] = utcEnd.ToLocalTime();
+                    }
+
+                    calendarDataGridView.DataSource = dataTable;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
     }
 }
 

@@ -57,11 +57,15 @@
             this.appointmentsTable = new System.Windows.Forms.DataGridView();
             this.calendarTab = new System.Windows.Forms.TabPage();
             this.reportsTab = new System.Windows.Forms.TabPage();
+            this.monthCalendar = new System.Windows.Forms.MonthCalendar();
+            this.calendarDataGridView = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.customerTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.customersTable)).BeginInit();
             this.appointmentTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appointmentsTable)).BeginInit();
+            this.calendarTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calendarDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -339,6 +343,8 @@
             // 
             // calendarTab
             // 
+            this.calendarTab.Controls.Add(this.calendarDataGridView);
+            this.calendarTab.Controls.Add(this.monthCalendar);
             this.calendarTab.Location = new System.Drawing.Point(4, 22);
             this.calendarTab.Name = "calendarTab";
             this.calendarTab.Size = new System.Drawing.Size(752, 511);
@@ -354,6 +360,23 @@
             this.reportsTab.TabIndex = 3;
             this.reportsTab.Text = "Reports";
             this.reportsTab.UseVisualStyleBackColor = true;
+            // 
+            // monthCalendar
+            // 
+            this.monthCalendar.CalendarDimensions = new System.Drawing.Size(3, 1);
+            this.monthCalendar.Location = new System.Drawing.Point(23, 17);
+            this.monthCalendar.Name = "monthCalendar";
+            this.monthCalendar.TabIndex = 0;
+            this.monthCalendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar_DateChanged);
+            // 
+            // calendarDataGridView
+            // 
+            this.calendarDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.calendarDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.calendarDataGridView.Location = new System.Drawing.Point(23, 191);
+            this.calendarDataGridView.Name = "calendarDataGridView";
+            this.calendarDataGridView.Size = new System.Drawing.Size(689, 307);
+            this.calendarDataGridView.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -372,6 +395,8 @@
             this.appointmentTab.ResumeLayout(false);
             this.appointmentTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appointmentsTable)).EndInit();
+            this.calendarTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.calendarDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -407,5 +432,7 @@
         private System.Windows.Forms.ComboBox appointmentCustomerComboBox;
         private System.Windows.Forms.TextBox appointmentTypeTextBox;
         private System.Windows.Forms.TextBox appointmentTitleTextBox;
+        private System.Windows.Forms.MonthCalendar monthCalendar;
+        private System.Windows.Forms.DataGridView calendarDataGridView;
     }
 }
