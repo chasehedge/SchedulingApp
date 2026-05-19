@@ -601,7 +601,7 @@ namespace SchedulingApp
             }
         }
 
-        
+
         // populates the calendarDataGridView with the appointments from the day selected on the calendar
         private void monthCalendar_DateChanged(object sender, DateRangeEventArgs e)
         {
@@ -611,7 +611,7 @@ namespace SchedulingApp
 
             try
             {
-                using ( var conn = new MySqlConnection(connectionString))
+                using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
                     var command = new MySqlCommand($"SELECT customer.customerName, title, type, start, end FROM appointment " +
@@ -641,7 +641,127 @@ namespace SchedulingApp
                 MessageBox.Show(ex.Message, "Error");
             }
         }
+
+        // gathering SQL data into a list to then apply LINQ and lambda expressions
+        private List<Appointment> GetAllAppointments()
+        {
+            var list = new List<Appointment>();
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var command = new MySqlCommand(
+                        "SELECT a.appointmentId, a.customerId, a.userId, c.customerName, a.title, a.type, a.start, a.end " +
+                        "FROM appointment a JOIN customer c ON a.customerId = c.customerId", conn);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var appt = new Appointment();
+                            appt.AppointmentId = Convert.ToInt32(reader["appointmentId"]);
+                            appt.CustomerId = Convert.ToInt32(reader["customerId"]);
+                            appt.UserId = Convert.ToInt32(reader["userId"]);
+                            appt.CustomerName = reader["customerName"].ToString();
+                            appt.Title = reader["title"].ToString();
+                            appt.Type = reader["type"].ToString();
+                            appt.Start = DateTime.SpecifyKind((DateTime)reader["start"], DateTimeKind.Utc).ToLocalTime();
+                            appt.End = DateTime.SpecifyKind((DateTime)reader["end"], DateTimeKind.Utc).ToLocalTime();
+
+                            list.Add(appt);
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+            return list;
+        }
+
+        // report button to generate type of appointments by month
+        private void typesReportButton_Click(object sender, EventArgs e)
+        {
+            // call GetAllAppointments to get the list
+            var appointments = GetAllAppointments();
+            reportTextBox.Clear();
+
+            // use LINQ with lambda to group year, month and type
+            var grouped = appointments
+                .GroupBy(a => new { a.Start.Year, a.Start.Month, a.Type })
+                .OrderBy(g => g.Key.Year)
+                .ThenBy(g => g.Key.Month)
+                .ThenBy(g => g.Key.Type);
+
+            reportTextBox.AppendText("Type of appointments per month\n");
+            reportTextBox.AppendText("==========================\n\n");
+
+            // loop through groups and write to the RichTextBox
+            foreach (var group in grouped)
+            {
+                reportTextBox.AppendText($"{group.Key.Year}-{group.Key.Month:D2} | {group.Key.Type}: {group.Count()}\n");
+            }
+
+
+        }
+        // report button to generate schedule for each user
+        private void scheduleReportButton_Click(object sender, EventArgs e)
+        {
+            // call GetAllAppointments to get the list
+            var appointments = GetAllAppointments();
+            reportTextBox.Clear();
+
+            // use LINQ with lambda to group userId 
+            var grouped = appointments
+                .GroupBy(a => a.UserId)
+                .OrderBy(g => g.Key);
+
+            reportTextBox.AppendText("Schedule for each user\n");
+            reportTextBox.AppendText("==========================\n\n");
+
+            // nested foreach loop, list appointments under its user
+            foreach (var group in grouped)
+            {
+                reportTextBox.AppendText($"User ID: {group.Key}\n");
+
+                var userAppointments = group.OrderBy(a => a.Start);
+
+                foreach (var appt in userAppointments)
+                {
+
+                    reportTextBox.AppendText($"  {appt.Start:g} - {appt.End:g} | {appt.Title} ({appt.Type}) for {appt.CustomerName}\n");
+                }
+
+                reportTextBox.AppendText("\n");
+            }
+        }
+        // report button to generate ammount of appointments per customer
+        private void appointmentsReportButton_Click(object sender, EventArgs e)
+        {
+            // call GetAllAppointments to get the list
+            var appointments = GetAllAppointments();
+            reportTextBox.Clear();
+
+            // use LINQ with lambda to group CustomerName
+            var grouped = appointments
+                .GroupBy(a => a.CustomerName)
+                .OrderByDescending(g => g.Key);
+
+            reportTextBox.AppendText("Appointments per Customer\n");
+            reportTextBox.AppendText("==========================\n\n");
+
+            foreach (var group in grouped)
+            {
+                reportTextBox.AppendText($"{group.Key}: {group.Count()} appointment(s)\n");
+            }
+        }
     }
 }
+
 
 

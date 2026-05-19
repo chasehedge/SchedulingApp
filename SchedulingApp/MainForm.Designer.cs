@@ -56,9 +56,13 @@
             this.appointmentAddButton = new System.Windows.Forms.Button();
             this.appointmentsTable = new System.Windows.Forms.DataGridView();
             this.calendarTab = new System.Windows.Forms.TabPage();
-            this.reportsTab = new System.Windows.Forms.TabPage();
-            this.monthCalendar = new System.Windows.Forms.MonthCalendar();
             this.calendarDataGridView = new System.Windows.Forms.DataGridView();
+            this.monthCalendar = new System.Windows.Forms.MonthCalendar();
+            this.reportsTab = new System.Windows.Forms.TabPage();
+            this.typesReportButton = new System.Windows.Forms.Button();
+            this.reportTextBox = new System.Windows.Forms.RichTextBox();
+            this.appointmentsReportButton = new System.Windows.Forms.Button();
+            this.scheduleReportButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.customerTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.customersTable)).BeginInit();
@@ -66,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.appointmentsTable)).BeginInit();
             this.calendarTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calendarDataGridView)).BeginInit();
+            this.reportsTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -352,14 +357,14 @@
             this.calendarTab.Text = "Calendar";
             this.calendarTab.UseVisualStyleBackColor = true;
             // 
-            // reportsTab
+            // calendarDataGridView
             // 
-            this.reportsTab.Location = new System.Drawing.Point(4, 22);
-            this.reportsTab.Name = "reportsTab";
-            this.reportsTab.Size = new System.Drawing.Size(752, 511);
-            this.reportsTab.TabIndex = 3;
-            this.reportsTab.Text = "Reports";
-            this.reportsTab.UseVisualStyleBackColor = true;
+            this.calendarDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.calendarDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.calendarDataGridView.Location = new System.Drawing.Point(23, 191);
+            this.calendarDataGridView.Name = "calendarDataGridView";
+            this.calendarDataGridView.Size = new System.Drawing.Size(689, 307);
+            this.calendarDataGridView.TabIndex = 1;
             // 
             // monthCalendar
             // 
@@ -369,14 +374,57 @@
             this.monthCalendar.TabIndex = 0;
             this.monthCalendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar_DateChanged);
             // 
-            // calendarDataGridView
+            // reportsTab
             // 
-            this.calendarDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.calendarDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.calendarDataGridView.Location = new System.Drawing.Point(23, 191);
-            this.calendarDataGridView.Name = "calendarDataGridView";
-            this.calendarDataGridView.Size = new System.Drawing.Size(689, 307);
-            this.calendarDataGridView.TabIndex = 1;
+            this.reportsTab.Controls.Add(this.typesReportButton);
+            this.reportsTab.Controls.Add(this.reportTextBox);
+            this.reportsTab.Controls.Add(this.appointmentsReportButton);
+            this.reportsTab.Controls.Add(this.scheduleReportButton);
+            this.reportsTab.Location = new System.Drawing.Point(4, 22);
+            this.reportsTab.Name = "reportsTab";
+            this.reportsTab.Size = new System.Drawing.Size(752, 511);
+            this.reportsTab.TabIndex = 3;
+            this.reportsTab.Text = "Reports";
+            this.reportsTab.UseVisualStyleBackColor = true;
+            // 
+            // typesReportButton
+            // 
+            this.typesReportButton.Location = new System.Drawing.Point(15, 16);
+            this.typesReportButton.Name = "typesReportButton";
+            this.typesReportButton.Size = new System.Drawing.Size(115, 23);
+            this.typesReportButton.TabIndex = 4;
+            this.typesReportButton.Text = "Type by Month";
+            this.typesReportButton.UseVisualStyleBackColor = true;
+            this.typesReportButton.Click += new System.EventHandler(this.typesReportButton_Click);
+            // 
+            // reportTextBox
+            // 
+            this.reportTextBox.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.reportTextBox.Location = new System.Drawing.Point(15, 45);
+            this.reportTextBox.Name = "reportTextBox";
+            this.reportTextBox.Size = new System.Drawing.Size(721, 453);
+            this.reportTextBox.TabIndex = 3;
+            this.reportTextBox.Text = "";
+            // 
+            // appointmentsReportButton
+            // 
+            this.appointmentsReportButton.Location = new System.Drawing.Point(277, 16);
+            this.appointmentsReportButton.Name = "appointmentsReportButton";
+            this.appointmentsReportButton.Size = new System.Drawing.Size(115, 23);
+            this.appointmentsReportButton.TabIndex = 2;
+            this.appointmentsReportButton.Text = "Appointment Report";
+            this.appointmentsReportButton.UseVisualStyleBackColor = true;
+            this.appointmentsReportButton.Click += new System.EventHandler(this.appointmentsReportButton_Click);
+            // 
+            // scheduleReportButton
+            // 
+            this.scheduleReportButton.Location = new System.Drawing.Point(146, 16);
+            this.scheduleReportButton.Name = "scheduleReportButton";
+            this.scheduleReportButton.Size = new System.Drawing.Size(115, 23);
+            this.scheduleReportButton.TabIndex = 1;
+            this.scheduleReportButton.Text = "Schedule Report";
+            this.scheduleReportButton.UseVisualStyleBackColor = true;
+            this.scheduleReportButton.Click += new System.EventHandler(this.scheduleReportButton_Click);
             // 
             // MainForm
             // 
@@ -397,6 +445,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.appointmentsTable)).EndInit();
             this.calendarTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.calendarDataGridView)).EndInit();
+            this.reportsTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -434,5 +483,9 @@
         private System.Windows.Forms.TextBox appointmentTitleTextBox;
         private System.Windows.Forms.MonthCalendar monthCalendar;
         private System.Windows.Forms.DataGridView calendarDataGridView;
+        private System.Windows.Forms.RichTextBox reportTextBox;
+        private System.Windows.Forms.Button appointmentsReportButton;
+        private System.Windows.Forms.Button scheduleReportButton;
+        private System.Windows.Forms.Button typesReportButton;
     }
 }
