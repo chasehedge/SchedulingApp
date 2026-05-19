@@ -10,8 +10,8 @@ A C# Windows Forms desktop application for managing customer appointments. Built
 - 15-minute appointment alert on login
 - Customer CRUD operations
 - Appointment CRUD operations with timezone handling
-- Calendar view for appointments - in progress
-- Reports generated with LINQ and lambda expressions - in progress
+- Calendar view for appointments 
+- Reports generated with LINQ and lambda expressions 
 
 ## Tech Stack
 
@@ -31,6 +31,10 @@ A C# Windows Forms desktop application for managing customer appointments. Built
 ### Login Form
 ![Login Form](SchedulingApp/screenshots/login.PNG)
 
+### Calendar Tab
+![Login Form](SchedulingApp/screenshots/calendar.PNG)
+### Reports Tab
+![Login Form](SchedulingApp/screenshots/report.PNG)
 ## Database & Data Layer
 
 This project uses MySQL with data access through raw ADO.NET via the MySql.Data connector (no ORM). I went without an ORM deliberately to keep direct control over the SQL and to deepen my understanding of query design.
