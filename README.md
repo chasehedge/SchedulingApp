@@ -1,6 +1,6 @@
 # Scheduling Application
 
-A C# Windows Forms desktop application for managing customer appointments. Built as a WGU C969 performance assessment.
+A C# Windows Forms desktop application for managing customers and scheduling appointments, with multi-language support, timezone handling, and reporting. Originally built as a WGU C969 performance assessment.
 
 ## Features
 
