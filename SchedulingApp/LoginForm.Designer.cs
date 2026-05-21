@@ -36,6 +36,7 @@
             this.errorLabel = new System.Windows.Forms.Label();
             this.locationLabel = new System.Windows.Forms.Label();
             this.languageButton = new System.Windows.Forms.Button();
+            this.timezoneLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // usernameLabel
@@ -116,11 +117,22 @@
             this.languageButton.UseVisualStyleBackColor = true;
             this.languageButton.Click += new System.EventHandler(this.languageButton_Click);
             // 
+            // timezoneLabel
+            // 
+            this.timezoneLabel.AutoSize = true;
+            this.timezoneLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.timezoneLabel.Location = new System.Drawing.Point(13, 507);
+            this.timezoneLabel.Name = "timezoneLabel";
+            this.timezoneLabel.Size = new System.Drawing.Size(61, 16);
+            this.timezoneLabel.TabIndex = 8;
+            this.timezoneLabel.Text = "timezone";
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.timezoneLabel);
             this.Controls.Add(this.languageButton);
             this.Controls.Add(this.locationLabel);
             this.Controls.Add(this.errorLabel);
@@ -148,6 +160,7 @@
         private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.Label locationLabel;
         private System.Windows.Forms.Button languageButton;
+        private System.Windows.Forms.Label timezoneLabel;
     }
 }
 

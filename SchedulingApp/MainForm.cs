@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace SchedulingApp
 
@@ -19,7 +20,7 @@ namespace SchedulingApp
     public partial class MainForm : Form
     {
         private int selectedCustomerId;
-        private string connectionString = "server=localhost;user=root;password=root;database=scheduling_db";
+        private string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
         private string currentUser;
         private int currentUserId;
         public MainForm()
@@ -206,7 +207,7 @@ namespace SchedulingApp
             // make sure user has selected a customer to update - display error if not
             if (customersTable.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Please select a customerr to update", "Error");
+                MessageBox.Show("Please select a customer to update", "Error");
                 return;
             }
 

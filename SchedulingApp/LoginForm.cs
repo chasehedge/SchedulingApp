@@ -11,20 +11,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Web.Script.Serialization;
+using System.Configuration;
 
 namespace SchedulingApp
 {
     public partial class LoginForm : Form
     {
         // connection string used to tell MySqlConnection the database login info.
-        private string connectionString = "server=localhost;user=root;password=root;database=scheduling_db";
+        private string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
         private bool isSpanish = false;
 
         public LoginForm()
         {
             InitializeComponent();
         }
-        // when the form loads it conats the api and determines the users location.
+        // when the form loads it contacts the api and determines the users location.
         private async void Form1_Load(object sender, EventArgs e)
         {
             using (var client = new HttpClient())
@@ -36,8 +37,23 @@ namespace SchedulingApp
                 var city = location["city"];
                 var regionName = location["regionName"];
                 var country = location["country"];
-
+                var timezone = location["timezone"];
+                var countryCode = location["countryCode"];
+               
+                timezoneLabel.Text = $"Time Zone: {timezone}";
                 locationLabel.Text = $"{city}, {regionName}, {country}";
+
+                // Auto-switch to Spanish if user is in a Spanish-speaking country
+                string[] spanishCountries = { "MX", "ES", "AR", "CO", "PE", "VE", "CL", "EC", "GT", "CU", "BO", "DO", "HN", "PY", "SV", "NI", "CR", "PA", "UY", "PR" };
+
+                if (spanishCountries.Contains(countryCode))
+                {
+                    isSpanish = true;
+                    usernameLabel.Text = "Usuario:";
+                    passwordLabel.Text = "Contraseña:";
+                    loginButton.Text = "Iniciar Sesión";
+                    languageButton.Text = "English";
+                }
             }
           
 

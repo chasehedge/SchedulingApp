@@ -51,7 +51,7 @@ This is a local development project. The connection string with credentials is h
 To run:
 1. Install MySQL and create a database called `scheduling_db`
 2. Run the included `database_setup.sql` script to create tables
-3. Update connection string in `LoginForm.cs` and `MainForm.cs` if needed
+3. Update connection string in App.config to match your MySQL credentials
 4. Build and run in Visual Studio
 
 ## Login
