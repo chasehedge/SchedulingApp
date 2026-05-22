@@ -1,5 +1,5 @@
-﻿CREATE DATABASE IF NOT EXISTS scheduling_db;
-USE scheduling_db;
+﻿CREATE DATABASE IF NOT EXISTS client_schedule;
+USE client_schedule;
 
 CREATE TABLE country (
     countryId INT(10) PRIMARY KEY AUTO_INCREMENT,
@@ -81,3 +81,7 @@ CREATE TABLE appointment (
 -- Insert test user
 INSERT INTO user (userName, password, active, createDate, createdBy, lastUpdate, lastUpdateBy)
 VALUES ('test', 'test', 1, NOW(), 'admin', NOW(), 'admin');
+
+CREATE USER 'sqlUser'@'localhost' IDENTIFIED BY 'Passw0rd!';
+GRANT ALL PRIVILEGES ON client_schedule.* TO 'sqlUser'@'localhost';
+FLUSH PRIVILEGES;
